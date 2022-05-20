@@ -1,3 +1,35 @@
+-- 1. Добавить внешние ключи. --
+ALTER TABLE `dealer`
+    ADD CONSTRAINT dealer_company_id_company_fk FOREIGN KEY (id_company)
+        REFERENCES company (id_company)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+
+ALTER TABLE `order`
+    ADD CONSTRAINT order_production_id_production_fk FOREIGN KEY (id_production)
+        REFERENCES production (id_production)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    ADD CONSTRAINT order_dealer_id_dealer_fk FOREIGN KEY (id_dealer)
+        REFERENCES dealer (id_dealer)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    ADD CONSTRAINT order_pharmacy_id_pharmacy_fk FOREIGN KEY (id_pharmacy)
+        REFERENCES pharmacy (id_pharmacy)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+
+ALTER TABLE `production`
+    ADD CONSTRAINT production_company_id_company_fk FOREIGN KEY (id_company)
+        REFERENCES company (id_company)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    ADD CONSTRAINT production_medicine_id_medicine_fk FOREIGN KEY (id_medicine)
+        REFERENCES medicine (id_medicine)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE;
+
+
 -- 2. Выдать информацию по всем заказам лекарства “Кордерон” компании "Аргус" с указанием названий аптек, дат, объема заказов
 SELECT 
   `pharmacy`.`name` AS `name`, 
@@ -62,3 +94,15 @@ WHERE `production`.`price` > 3000
 SELECT * FROM `production`
   LEFT JOIN `medicine` ON `medicine`.`id_medicine` = `production`.`id_medicine`
   WHERE `medicine`.`cure_duration` <= 7;
+  
+  
+-- 7. Добавить необходимые индексы. --
+CREATE INDEX company_name_idx ON company (name);
+
+CREATE INDEX medicine_name_idx ON medicine (name);
+
+CREATE INDEX medicine_cure_duration_idx ON medicine (cure_duration);
+
+CREATE INDEX production_price_idx ON production (price);
+
+CREATE INDEX order_date_idx ON `order` (date);
